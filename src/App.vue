@@ -1,6 +1,9 @@
 <template>
-    <div class="m-2">
-
+    <div class="m-2 overflow-hidden">
+        <div class="d-flex justify-content-end">
+            <i v-if="theme === 'dark'" class="bi bi-moon" @click="toggleTheme"></i>
+            <i v-else class="bi bi-sun" @click="toggleTheme"></i>
+        </div>
         <div class="row d-flex text-center mt-5">
             <h1>Grade Average Calculator</h1>
             <p>Enter subjects and grades.</p>
@@ -95,6 +98,8 @@ const grade_sugestion = ref<Number>(0)
 const subject_input = ref<String>('')
 const grade_input = ref<Number | null>(null)
 
+const theme = ref('light')
+
 watch(subject_grade, (newVal) => {
     const grades = newVal.map(row => row.grade).filter(Boolean)
     const sum = grades.reduce((a, b) => Number(a) + Number(b), 0)
@@ -137,6 +142,13 @@ function removeSubject(subject: String, grade: Number | null) {
     subject_grade.value = subject_grade.value.filter((row) => {
         return row.subject !== subject || row.grade !== grade
     })
+}
+
+function toggleTheme() {
+    const htmlEl = document.documentElement;
+    const currentTheme = htmlEl.getAttribute('data-bs-theme');
+    theme.value = currentTheme === 'dark' ? 'light' : 'dark';
+    htmlEl.setAttribute('data-bs-theme', currentTheme === 'dark' ? 'light' : 'dark');
 }
 </script>
 
