@@ -66,11 +66,11 @@
             <div class="col-5">
                 <div class="container d-flex flex-column justify-content-center align-items-center">
                     <div class="mt-4">
-                        <span v-if="avg_grade > 0" class="fs-5 text-center">Twoja średnia ocen: <strong>{{ avg_grade.toFixed(3)
+                        <span v-if="Number(avg_grade) > 0" class="fs-5 text-center">Twoja średnia ocen: <strong>{{ avg_grade.toFixed(3)
                         }}</strong></span>
                     </div>
                     <div>
-                        <br v-if="grade_sugestion > 1">
+                        <br v-if="Number(grade_sugestion) > 1">
                         <span v-if="grade_sugestion == 2" class="text-danger fs-5">Niedostateczny</span>
                         <span v-if="grade_sugestion == 3" class="text-warning fs-5">Dostateczny</span>
                         <span v-if="grade_sugestion == 4" class="text-primary fs-5">Dobry</span>
@@ -97,16 +97,16 @@ const grade_input = ref<Number | null>(null)
 
 watch(subject_grade, (newVal) => {
     const grades = newVal.map(row => row.grade).filter(Boolean)
-    const sum = grades.reduce((a, b) => a + b, 0)
+    const sum = grades.reduce((a, b) => Number(a) + Number(b), 0)
     const count = grades.length
-    avg_grade.value = sum / count || 0
+    avg_grade.value = Number(sum) / count || 0
 }, { deep: true });
 
 watch(avg_grade, (newVal) => {
-    if (newVal < 2.0) grade_sugestion.value = 1
-    else if (newVal < 2.5) grade_sugestion.value = 2
-    else if (newVal < 3.5) grade_sugestion.value = 3
-    else if (newVal < 4.5) grade_sugestion.value = 4
+    if (Number(newVal) < 2.0) grade_sugestion.value = 1
+    else if (Number(newVal) < 2.5) grade_sugestion.value = 2
+    else if (Number(newVal) < 3.5) grade_sugestion.value = 3
+    else if (Number(newVal) < 4.5) grade_sugestion.value = 4
     else grade_sugestion.value = 5
 })
 
@@ -114,7 +114,7 @@ function addSubject() {
     if (subject_input.value.trim() === '' || grade_input.value === null) {
         error.value = 'Wypełnij wszystkie pola!'
         return
-    } else if (grade_input.value < 2.0 || grade_input.value > 5.0) {
+    } else if (Number(grade_input.value) < 2.0 || Number(grade_input.value) > 5.0) {
         error.value = 'Ocena musi być z przedziału 2.0 - 5.0!'
         return
     } else if (subject_grade.value.some((row) => {
