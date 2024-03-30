@@ -2,23 +2,23 @@
     <div class="m-2">
 
         <div class="row d-flex text-center mt-5">
-            <h1>Kalkulator średniej ocen</h1>
-            <p>Wprowadź przedmioty oraz oceny.</p>
+            <h1>Grade Average Calculator</h1>
+            <p>Enter subjects and grades.</p>
         </div>
         <div class="row">
             <div class="col"></div>
             <div class="col-4">
                 <div class="form-floating mb-3">
                     <input v-model="subject_input" type="text" class="form-control" id="subject"
-                        placeholder="Np. matematyka">
-                    <label for="subject">Nazwa przedmiotu</label>
+                        placeholder="E.g. Mathematics">
+                    <label for="subject">Subject Name</label>
                 </div>
             </div>
             <div class="col-4">
                 <div class="form-floating mb-3">
-                    <input v-model="grade_input" type="number" class="form-control" id="grade" placeholder="Np. 4.5"
+                    <input v-model="grade_input" type="number" class="form-control" id="grade" placeholder="E.g. 4.5"
                         min="2.0" max="5.0" step="0.5">
-                    <label for="grade">Ocena</label>
+                    <label for="grade">Grade</label>
                 </div>
             </div>
             <div class="col"></div>
@@ -33,7 +33,7 @@
         <div class="row text-center">
             <div class="col"></div>
             <div class="col-8">
-                <button class="btn btn-primary" @click="addSubject()"><i class="bi bi-plus-lg me-1"></i>Dodaj nowy przedmiot</button>
+                <button class="btn btn-primary" @click="addSubject()"><i class="bi bi-plus-lg me-1"></i>Add new subject</button>
             </div>
             <div class="col"></div>
         </div>
@@ -44,8 +44,8 @@
                     <table v-if="subject_grade.length > 0" class="table table-striped">
                         <thead>
                             <tr>
-                                <th scope="col">Przedmiot</th>
-                                <th scope="col" class="text-center">Ocena</th>
+                                <th scope="col">Subject</th>
+                                <th scope="col" class="text-center">Grade</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -66,15 +66,15 @@
             <div class="col-5">
                 <div class="container d-flex flex-column justify-content-center align-items-center">
                     <div class="mt-4">
-                        <span v-if="Number(avg_grade) > 0" class="fs-5 text-center">Twoja średnia ocen: <strong>{{ avg_grade.toFixed(3)
+                        <span v-if="Number(avg_grade) > 0" class="fs-5 text-center">Your average grade: <strong>{{ avg_grade.toFixed(3)
                         }}</strong></span>
                     </div>
                     <div>
                         <br v-if="Number(grade_sugestion) > 1">
-                        <span v-if="grade_sugestion == 2" class="text-danger fs-5">Niedostateczny</span>
-                        <span v-if="grade_sugestion == 3" class="text-warning fs-5">Dostateczny</span>
-                        <span v-if="grade_sugestion == 4" class="text-primary fs-5">Dobry</span>
-                        <span v-if="grade_sugestion == 5" class="text-success fs-5">Bardzo Dobry</span>
+                        <span v-if="grade_sugestion == 2" class="text-danger fs-5">Unsatisfactory</span>
+                        <span v-if="grade_sugestion == 3" class="text-warning fs-5">Satisfactory</span>
+                        <span v-if="grade_sugestion == 4" class="text-primary fs-5">Good</span>
+                        <span v-if="grade_sugestion == 5" class="text-success fs-5">Very Good</span>
                     </div>
                 </div>
             </div>
@@ -112,15 +112,15 @@ watch(avg_grade, (newVal) => {
 
 function addSubject() {
     if (subject_input.value.trim() === '' || grade_input.value === null) {
-        error.value = 'Wypełnij wszystkie pola!'
+        error.value = 'Fill in all fields!'
         return
     } else if (Number(grade_input.value) < 2.0 || Number(grade_input.value) > 5.0) {
-        error.value = 'Ocena musi być z przedziału 2.0 - 5.0!'
+        error.value = 'Grade must be between 2.0 - 5.0!'
         return
     } else if (subject_grade.value.some((row) => {
         return row.subject.toLowerCase() === subject_input.value.toLowerCase()
     })) {
-        error.value = 'Taki przedmiot już istnieje!'
+        error.value = 'This subject already exists!'
         return
     }
 
