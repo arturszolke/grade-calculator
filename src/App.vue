@@ -66,7 +66,7 @@
             <div class="col-5">
                 <div class="container d-flex flex-column justify-content-center align-items-center">
                     <div class="mt-4">
-                        <span v-if="avg_grade > 0" class="fs-5 text-center">Twoja średnia ocen: <strong>{{ avg_grade
+                        <span v-if="avg_grade > 0" class="fs-5 text-center">Twoja średnia ocen: <strong>{{ avg_grade.toFixed(3)
                         }}</strong></span>
                     </div>
                     <div>
@@ -86,49 +86,32 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 
-let error = ref('')
+const error = ref('')
 
-let subject_grade = ref<Array<{ subject: String, grade: Number | null }>>([])
-let avg_grade = ref<Number>(0)
-let grade_sugestion = ref<Number>(0)
+const subject_grade = ref<Array<{ subject: String, grade: Number | null }>>([])
+const avg_grade = ref<Number>(0)
+const grade_sugestion = ref<Number>(0)
 
-let subject_input = ref<String>('')
-let grade_input = ref<Number | null>(null)
+const subject_input = ref<String>('')
+const grade_input = ref<Number | null>(null)
 
 watch(subject_grade, (newVal) => {
-    let sum = 0
-    let count = 0
-    newVal.forEach((row) => {
-        if (row.grade !== null) {
-            sum += row.grade
-            count++
-        }
-    })
-    avg_grade.value = sum / count
-
-    if (Number.isNaN(avg_grade.value)) {
-        avg_grade.value = 0
-    }
-}, { deep: true })
+    const grades = newVal.map(row => row.grade).filter(Boolean)
+    const sum = grades.reduce((a, b) => a + b, 0)
+    const count = grades.length
+    avg_grade.value = sum / count || 0
+}, { deep: true });
 
 watch(avg_grade, (newVal) => {
-    if (newVal < 2.0) {
-        grade_sugestion.value = 1
-    }else if (newVal < 2.5) {
-        grade_sugestion.value = 2
-    } else if (newVal < 3.5) {
-        grade_sugestion.value = 3
-    } else if (newVal < 4.5) {
-        grade_sugestion.value = 4
-    } else if (newVal <= 5.0) {
-        grade_sugestion.value = 5
-    } else {
-        grade_sugestion.value = 5
-    }
+    if (newVal < 2.0) grade_sugestion.value = 1
+    else if (newVal < 2.5) grade_sugestion.value = 2
+    else if (newVal < 3.5) grade_sugestion.value = 3
+    else if (newVal < 4.5) grade_sugestion.value = 4
+    else grade_sugestion.value = 5
 })
 
 function addSubject() {
-    if (subject_input.value === '' || grade_input.value === null) {
+    if (subject_input.value.trim() === '' || grade_input.value === null) {
         error.value = 'Wypełnij wszystkie pola!'
         return
     } else if (grade_input.value < 2.0 || grade_input.value > 5.0) {
