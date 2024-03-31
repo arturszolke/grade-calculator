@@ -36,7 +36,8 @@
         <div class="row text-center">
             <div class="col"></div>
             <div class="col-8">
-                <button class="btn btn-primary" @click="addSubject()"><i class="bi bi-plus-lg me-1"></i>Add new subject</button>
+                <button class="btn btn-primary" @click="addSubject()"><i class="bi bi-plus-lg me-1"></i>Add new
+                    subject</button>
             </div>
             <div class="col"></div>
         </div>
@@ -70,8 +71,9 @@
             <div class="col-5">
                 <div class="container d-flex flex-column justify-content-center align-items-center">
                     <div class="mt-4">
-                        <span v-if="Number(avg_grade) > 0" class="fs-5 text-center">Your average grade: <strong>{{ avg_grade.toFixed(3)
-                        }}</strong></span>
+                        <span v-if="Number(avg_grade) > 0" class="fs-5 text-center">Your average grade: <strong>{{
+                avg_grade.toFixed(3)
+            }}</strong></span>
                     </div>
                     <div>
                         <br v-if="Number(grade_sugestion) > 1">
@@ -149,13 +151,6 @@ function removeSubject(subject: String, grade: Number | null) {
     subject_grade.value = subject_grade.value.filter((row) => {
         return row.subject !== subject || row.grade !== grade
     })
-}
-
-function toggleTheme() {
-    const htmlEl = document.documentElement;
-    const currentTheme = htmlEl.getAttribute('data-bs-theme');
-    theme.value = currentTheme === 'dark' ? 'light' : 'dark';
-    htmlEl.setAttribute('data-bs-theme', currentTheme === 'dark' ? 'light' : 'dark');
 }
 
 function toggleTheme() {
