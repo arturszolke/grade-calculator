@@ -1,8 +1,8 @@
 <template>
     <div class="m-2 overflow-hidden">
         <div class="d-flex justify-content-end">
-            <i v-if="theme === 'dark'" class="bi bi-moon" @click="toggleTheme"></i>
-            <i v-else class="bi bi-sun" @click="toggleTheme"></i>
+            <i v-if="theme === 'dark'" class="bi bi-moon" @click="toggleTheme" role="button"></i>
+            <i v-else class="bi bi-sun" @click="toggleTheme" role="button"></i>
         </div>
         <div class="row d-flex text-center mt-5">
             <h1>Kalkulator średniej ocen</h1>
@@ -36,7 +36,8 @@
         <div class="row text-center">
             <div class="col"></div>
             <div class="col-8">
-                <button class="btn btn-primary" @click="addSubject()"><i class="bi bi-plus-lg me-1"></i>Dodaj nowy przedmiot</button>
+                <button class="btn btn-primary" @click="addSubject()"><i class="bi bi-plus-lg me-1"></i>Dodaj nowy
+                    przedmiot</button>
             </div>
             <div class="col"></div>
         </div>
@@ -57,7 +58,8 @@
                                 <td>{{ row.subject }}</td>
                                 <td class="text-center">{{ row.grade }}</td>
                                 <td class="text-center">
-                                    <button class="btn btn-outline-danger" @click="removeSubject(row.subject, row.grade)">
+                                    <button class="btn btn-outline-danger"
+                                        @click="removeSubject(row.subject, row.grade)">
                                         <i class="bi bi-x"></i>
                                     </button>
                                 </td>
@@ -69,8 +71,9 @@
             <div class="col-5">
                 <div class="container d-flex flex-column justify-content-center align-items-center">
                     <div class="mt-4">
-                        <span v-if="Number(avg_grade) > 0" class="fs-5 text-center">Twoja średnia ocen: <strong>{{ avg_grade.toFixed(3)
-                        }}</strong></span>
+                        <span v-if="Number(avg_grade) > 0" class="fs-5 text-center">Twoja średnia ocen: <strong>{{
+                avg_grade.toFixed(3)
+            }}</strong></span>
                     </div>
                     <div>
                         <br v-if="Number(grade_sugestion) > 1">
@@ -87,7 +90,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 const error = ref('')
 
@@ -99,6 +102,12 @@ const subject_input = ref<String>('')
 const grade_input = ref<Number | null>(null)
 
 const theme = ref('light')
+
+onMounted(() => {
+    const htmlEl = document.documentElement;
+    const currentTheme = htmlEl.getAttribute('data-bs-theme');
+    theme.value = currentTheme === 'dark' ? 'dark' : 'light';
+})
 
 watch(subject_grade, (newVal) => {
     const grades = newVal.map(row => row.grade).filter(Boolean)
