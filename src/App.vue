@@ -54,7 +54,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="row in subject_grade" class="align-middle">
+                            <tr v-for="row in subject_grade" class="align-middle" :class="row.grade == 2 ? 'table-danger' : ''">
                                 <td>{{ row.subject }}</td>
                                 <td class="text-center">{{ row.grade }}</td>
                                 <td class="text-center">
