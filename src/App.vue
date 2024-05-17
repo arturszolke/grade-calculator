@@ -54,7 +54,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="row in subject_grade" class="align-middle" :class="row.grade == 2 ? 'table-danger' : ''">
+                            <tr v-for="row in subject_grade" class="align-middle"
+                                :class="row.grade == 2 ? 'table-danger' : ''">
                                 <td>{{ row.subject }}</td>
                                 <td class="text-center">{{ row.grade }}</td>
                                 <td class="text-center">
@@ -72,8 +73,8 @@
                 <div class="container d-flex flex-column justify-content-center align-items-center">
                     <div class="mt-4">
                         <span v-if="Number(avg_grade) > 0" class="fs-5 text-center">Your average grade: <strong>{{
-                avg_grade.toFixed(3)
-            }}</strong></span>
+                            avg_grade.toFixed(3)
+                                }}</strong></span>
                     </div>
                     <div>
                         <br v-if="Number(grade_sugestion) > 1">
