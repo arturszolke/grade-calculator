@@ -62,11 +62,11 @@ const commonSubjects = [
 
 const error = ref('')
 
-const subject_grade = ref<Array<{ subject: String, grade: Number | null }>>([])
+const subject_grade = ref<Array<{ subject: string; grade: number | null }>>([])
 const avg_grade = ref<Number>(0)
 
 const subject_input = ref<string>('')
-const grade_input = ref<Number | null>(null)
+const grade_input = ref<number | null>(null)
 
 watch(subject_grade, (newVal) => {
     const grades = newVal.map(row => row.grade).filter(Boolean)
@@ -79,7 +79,7 @@ function addSubject() {
     if (subject_input.value.trim() === '' || grade_input.value === null) {
         error.value = 'Fill in all fields!'
         return
-    } else if (Number(grade_input.value) < 2.0 || Number(grade_input.value) > 5.0) {
+    } else if (grade_input.value < 2.0 || grade_input.value > 5.0) {
         error.value = 'Grade must be between 2.0 - 5.0!'
         return
     } else if (subject_grade.value.some((row) => {
