@@ -1,5 +1,5 @@
 <template>
-    <div class="m-2 overflow-hidden">
+    <div class="m-2 overflow-hidden vh-100">
         <div class="d-flex justify-content-end">
             <i v-if="theme === 'dark'" class="bi bi-moon" @click="toggleTheme" role="button"></i>
             <i v-else class="bi bi-sun" @click="toggleTheme" role="button"></i>
@@ -11,7 +11,17 @@
         <div class="row">
             <div class="col"></div>
             <div class="col-4">
-                <AppInput v-model="subject_input" type="text" placeholder="E.g. Mathematics" label="Subject Name" />
+                <div class="position-relative">
+                    <AppInput v-model="subject_input" type="text" placeholder="E.g. Mathematics" label="Subject Name"
+                        @focus="showSuggestions = true" @input="onSubjectInput" />
+                    <ul v-if="showSuggestions && filteredSubjects.length > 0"
+                        class="list-group position-absolute w-100 suggestion-list" ref="suggestionList">
+                        <li v-for="subject in filteredSubjects" :key="subject"
+                            class="list-group-item list-group-item-action" @click="selectSubject(subject)">
+                            {{ subject }}
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="col-4">
                 <AppInput v-model="grade_input" type="number" placeholder="E.g. 4.5" label="Grade" :min="2.0" :max="5.0"
@@ -63,9 +73,23 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watch, computed } from 'vue'
+import { onMounted, ref, watch, computed, onUnmounted } from 'vue'
 import AppInput from '@/components/AppInput.vue'
 import GradeTable from '@/components/GradeTable.vue'
+
+const commonSubjects = [
+    'Mathematics', 'Physics', 'Chemistry', 'Biology', 'History',
+    'Geography', 'Literature', 'Computer Science', 'Economics',
+    'Psychology', 'Sociology', 'Philosophy', 'Art', 'Music'
+];
+
+const filteredSubjects = computed(() => {
+    if (!subject_input.value) return [];
+    const input = subject_input.value.toLowerCase();
+    return commonSubjects.filter(subject =>
+        subject.toLowerCase().startsWith(input)
+    ).slice(0, 5); // Limit to 5 suggestions
+});
 
 const error = ref('')
 
@@ -75,6 +99,8 @@ const grade_sugestion = ref<Number>(0)
 
 const subject_input = ref<String>('')
 const grade_input = ref<Number | null>(null)
+const showSuggestions = ref(false)
+const suggestionList = ref<HTMLElement | null>(null)
 
 const theme = ref('light')
 
@@ -82,7 +108,12 @@ onMounted(() => {
     const htmlEl = document.documentElement;
     const currentTheme = htmlEl.getAttribute('data-bs-theme');
     theme.value = currentTheme === 'dark' ? 'dark' : 'light';
-})
+    document.addEventListener('click', handleClickOutside);
+});
+
+onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside);
+});
 
 watch(subject_grade, (newVal) => {
     const grades = newVal.map(row => row.grade).filter(Boolean)
@@ -134,4 +165,41 @@ function toggleTheme() {
     theme.value = currentTheme === 'dark' ? 'light' : 'dark';
     htmlEl.setAttribute('data-bs-theme', currentTheme === 'dark' ? 'light' : 'dark');
 }
+
+function selectSubject(subject: string) {
+    subject_input.value = subject;
+    showSuggestions.value = false;
+}
+
+function onSubjectInput() {
+    showSuggestions.value = true;
+}
+
+function handleClickOutside(event: MouseEvent) {
+    if (suggestionList.value && !suggestionList.value.contains(event.target as Node)) {
+        showSuggestions.value = false;
+    }
+}
 </script>
+
+<style scoped>
+.position-relative {
+    z-index: 1000;
+}
+
+.list-group {
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1001;
+}
+
+.suggestion-list {
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1001;
+    top: 100%;
+    margin-top: -1px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+</style>

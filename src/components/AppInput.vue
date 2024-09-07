@@ -1,14 +1,14 @@
 <template>
     <div class="form-floating mb-3">
         <input v-model="model" :type="type" :id="id" :placeholder="placeholder" class="form-control"
-            @input="validateInput()">
+            @input="validateInput()" @focus="$emit('focus')">
         <label :for="id">{{ placeholder }}</label>
         <span v-if="errorMessage.length > 0" class="text-danger">{{ errorMessage }}</span>
     </div>
 </template>
 
 <script setup lang="ts">
-import { defineModel, defineProps, ref } from 'vue'
+import { defineModel, defineProps, ref, defineEmits } from 'vue'
 
 const props = defineProps({
     type: {
@@ -30,6 +30,8 @@ const props = defineProps({
 
 const model = defineModel();
 const errorMessage = ref('');
+
+const emit = defineEmits(['focus']);
 
 const validateInput = () => {
     errorMessage.value = props.validate(model.value) ? '' : 'Invalid input';
