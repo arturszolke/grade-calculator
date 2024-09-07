@@ -41,8 +41,14 @@ const sortedGrades = computed(() => {
     return [...props.grades].sort((a, b) => {
         if (sortKey.value === null) return 0;
         let modifier = sortOrder.value === 'asc' ? 1 : -1;
-        if (a[sortKey.value] < b[sortKey.value]) return -1 * modifier;
-        if (a[sortKey.value] > b[sortKey.value]) return 1 * modifier;
+        if (sortKey.value !== null) {
+            const aValue = a[sortKey.value];
+            const bValue = b[sortKey.value];
+            if (aValue !== null && bValue !== null) {
+                if (aValue < bValue) return -1 * modifier;
+                if (aValue > bValue) return 1 * modifier;
+            }
+        }
         return 0;
     });
 });
