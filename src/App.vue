@@ -4,25 +4,18 @@
             <i v-if="theme === 'dark'" class="bi bi-moon" @click="toggleTheme" role="button"></i>
             <i v-else class="bi bi-sun" @click="toggleTheme" role="button"></i>
         </div>
-        <div class="row d-flex text-center mt-5">
+        <div class="row d-flex text-center mt-5 app-title">
             <h1>Grade Average Calculator</h1>
             <p>Enter subjects and grades.</p>
         </div>
         <div class="row">
             <div class="col"></div>
             <div class="col-4">
-                <div class="form-floating mb-3">
-                    <input v-model="subject_input" type="text" class="form-control" id="subject"
-                        placeholder="E.g. Mathematics">
-                    <label for="subject">Subject Name</label>
-                </div>
+                <AppInput v-model="subject_input" type="text" placeholder="E.g. Mathematics" label="Subject Name" />
             </div>
             <div class="col-4">
-                <div class="form-floating mb-3">
-                    <input v-model="grade_input" type="number" class="form-control" id="grade" placeholder="E.g. 4.5"
-                        min="2.0" max="5.0" step="0.5">
-                    <label for="grade">Grade</label>
-                </div>
+                <AppInput v-model="grade_input" type="number" placeholder="E.g. 4.5" label="Grade" :min="2.0" :max="5.0"
+                    :step="0.5" />
             </div>
             <div class="col"></div>
         </div>
@@ -45,28 +38,7 @@
             <div class="col"></div>
             <div class="col-5">
                 <div class="row g-2 my-2">
-                    <table v-if="subject_grade.length > 0" class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">Subject</th>
-                                <th scope="col" class="text-center">Grade</th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="row in subject_grade" class="align-middle"
-                                :class="row.grade == 2 ? 'table-danger' : ''">
-                                <td>{{ row.subject }}</td>
-                                <td class="text-center">{{ row.grade }}</td>
-                                <td class="text-center">
-                                    <button class="btn btn-outline-danger"
-                                        @click="removeSubject(row.subject, row.grade)">
-                                        <i class="bi bi-x"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <GradeTable :grades="subject_grade" @remove="removeSubject" />
                 </div>
             </div>
             <div class="col-5">
@@ -91,7 +63,9 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, computed } from 'vue'
+import AppInput from '@/components/AppInput.vue'
+import GradeTable from '@/components/GradeTable.vue'
 
 const error = ref('')
 
@@ -161,5 +135,3 @@ function toggleTheme() {
     htmlEl.setAttribute('data-bs-theme', currentTheme === 'dark' ? 'light' : 'dark');
 }
 </script>
-
-<style></style>
