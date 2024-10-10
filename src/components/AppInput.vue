@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineModel, defineProps, ref, defineEmits } from 'vue'
+import { defineModel, ref } from 'vue'
 
 const props = defineProps({
     type: {
