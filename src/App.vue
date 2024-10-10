@@ -43,6 +43,13 @@
             </div>
             <div class="col"></div>
         </div>
+        <div v-if="subject_grade.length > 0" class="row text-center">
+            <div class="col"></div>
+            <div class="col-8">
+                <GradeExport :subject_grade="subject_grade" :avg_grade="Number(avg_grade)" />
+            </div>
+            <div class="col"></div>
+        </div>
     </div>
 </template>
 
@@ -53,6 +60,7 @@ import GradeTable from '@/components/GradeTable.vue';
 import ThemeToggle from '@/components/ThemeToggle.vue';
 import SubjectInput from '@/components/SubjectInput.vue';
 import GradeSuggestion from '@/components/GradeSuggestion.vue';
+import GradeExport from '@/components/GradeExport.vue';
 
 const commonSubjects = [
     'Mathematics', 'Physics', 'Chemistry', 'Biology', 'History',
