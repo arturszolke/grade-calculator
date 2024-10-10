@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import AppInput from '@/components/AppInput.vue';
 import GradeTable from '@/components/GradeTable.vue';
 import ThemeToggle from '@/components/ThemeToggle.vue';
@@ -81,6 +81,8 @@ watch(subject_grade, (newVal) => {
     const sum = grades.reduce((a, b) => Number(a) + Number(b), 0)
     const count = grades.length
     avg_grade.value = Number(sum) / count || 0
+    
+    localStorage.setItem('subject_grade', JSON.stringify(newVal))
 }, { deep: true });
 
 function addSubject() {
@@ -111,6 +113,13 @@ function removeSubject(subject: String, grade: Number | null) {
         return row.subject !== subject || row.grade !== grade
     })
 }
+
+onMounted(() => {
+    const storedGrades = localStorage.getItem('subject_grade')
+    if (storedGrades) {
+        subject_grade.value = JSON.parse(storedGrades)
+    }
+})
 </script>
 
 <style scoped>

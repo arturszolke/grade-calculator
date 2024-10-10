@@ -5,14 +5,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 const theme = ref('light');
 
+onMounted(() => {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    theme.value = savedTheme;
+    document.documentElement.setAttribute('data-bs-theme', savedTheme);
+});
+
 function toggleTheme() {
-    const htmlEl = document.documentElement;
-    const currentTheme = htmlEl.getAttribute('data-bs-theme');
-    theme.value = currentTheme === 'dark' ? 'light' : 'dark';
-    htmlEl.setAttribute('data-bs-theme', currentTheme === 'dark' ? 'light' : 'dark');
+    theme.value = theme.value === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-bs-theme', theme.value);
+    localStorage.setItem('theme', theme.value);
 }
 </script>
