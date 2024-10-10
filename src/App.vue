@@ -38,15 +38,11 @@
                     <GradeTable :grades="subject_grade" @remove="removeSubject" />
                 </div>
             </div>
-            <div class="col-5">
+            <div class="col-5 text-center">
                 <GradeSuggestion :avg-grade="Number(avg_grade)" />
-            </div>
-            <div class="col"></div>
-        </div>
-        <div v-if="subject_grade.length > 0" class="row text-center">
-            <div class="col"></div>
-            <div class="col-8">
-                <GradeExport :subject_grade="subject_grade" :avg_grade="Number(avg_grade)" />
+                <div v-if="subject_grade.length > 0" class="mt-4">
+                    <GradeExport :subject_grade="subject_grade" :avg_grade="Number(avg_grade)" />
+                </div>
             </div>
             <div class="col"></div>
         </div>
