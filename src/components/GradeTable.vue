@@ -37,28 +37,21 @@ const sortKey = ref<'subject' | 'grade' | null>(null);
 const sortOrder = ref<'asc' | 'desc' | null>(null);
 
 const sortedGrades = computed(() => {
-    if (sortKey.value === null) return props.grades;
+    if (!sortKey.value) return props.grades;
+    const modifier = sortOrder.value === 'asc' ? 1 : -1;
     return [...props.grades].sort((a, b) => {
-        if (sortKey.value === null) return 0;
-        let modifier = sortOrder.value === 'asc' ? 1 : -1;
-        if (sortKey.value !== null) {
-            const aValue = a[sortKey.value];
-            const bValue = b[sortKey.value];
-            if (aValue !== null && bValue !== null) {
-                if (aValue < bValue) return -1 * modifier;
-                if (aValue > bValue) return 1 * modifier;
-            }
-        }
-        return 0;
+        const key = sortKey.value!;
+        const aValue = a[key];
+        const bValue = b[key];
+        if (aValue === bValue) return 0;
+        return (aValue! < bValue! ? -1 : 1) * modifier;
     });
 });
 
 function sortBy(key: 'subject' | 'grade') {
     if (key === sortKey.value) {
-        sortOrder.value = sortOrder.value === 'asc' ? 'desc' : sortOrder.value === 'desc' ? null : 'asc';
-        if (sortOrder.value === null) {
-            sortKey.value = null;
-        }
+        sortOrder.value = sortOrder.value === 'asc' ? 'desc' : null;
+        if (!sortOrder.value) sortKey.value = null;
     } else {
         sortKey.value = key;
         sortOrder.value = 'asc';
@@ -67,8 +60,7 @@ function sortBy(key: 'subject' | 'grade') {
 
 function sortIcon(key: 'subject' | 'grade') {
     if (sortKey.value === key) {
-        if (sortOrder.value === 'asc') return 'bi bi-sort-up';
-        if (sortOrder.value === 'desc') return 'bi bi-sort-down';
+        return sortOrder.value === 'asc' ? 'bi bi-sort-up' : 'bi bi-sort-down';
     }
     return 'bi bi-filter';
 }
