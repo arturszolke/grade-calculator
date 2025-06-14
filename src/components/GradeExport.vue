@@ -2,8 +2,8 @@
     <div>
         <div class="mb-2 d-flex align-items-center justify-content-center">
             <select v-model="selectedFileType" class="form-select d-inline-block w-auto me-2">
-                <option value="csv">CSV</option>
                 <option value="xlsx">Excel</option>
+                <option value="csv">CSV</option>
             </select>
             <button class="btn btn-primary" @click="exportData">Export</button>
         </div>
@@ -19,7 +19,7 @@ const props = defineProps<{
     avg_grade: number
 }>()
 
-const selectedFileType = ref<'csv' | 'xlsx'>('csv');
+const selectedFileType = ref<'csv' | 'xlsx'>('xlsx');
 
 function exportData() {
     const data = [
