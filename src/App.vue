@@ -132,6 +132,7 @@ function editSubject(subject: string, grade: number | null) {
     subject_input.value = subject
     grade_input.value = grade
     editingSubject.value = subject
+    window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 function cancelEdit() {
