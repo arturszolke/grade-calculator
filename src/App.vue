@@ -1,5 +1,5 @@
 <template>
-    <div class="m-2 overflow-hidden vh-100">
+    <div class="m-2 min-vh-100">
         <ThemeToggle />
         <div class="row d-flex text-center mt-5 app-title">
             <h1>Grade Average Calculator</h1>
@@ -119,23 +119,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.position-relative {
-    z-index: 1000;
-}
 
-.list-group {
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1001;
-}
-
-.suggestion-list {
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1001;
-    top: 100%;
-    margin-top: -1px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-}
 </style>
