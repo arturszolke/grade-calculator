@@ -26,8 +26,13 @@
         <div class="row text-center">
             <div class="col"></div>
             <div class="col-8">
-                <button class="btn btn-primary" @click="addSubject()"><i class="bi bi-plus-lg me-1"></i>Add new
-                    subject</button>
+                <button class="btn" :class="editingSubject ? 'btn-warning' : 'btn-primary'" @click="addSubject()">
+                    <i :class="editingSubject ? 'bi bi-pencil' : 'bi bi-plus-lg'" class="me-1"></i>
+                    {{ editingSubject ? 'Update Subject' : 'Add new subject' }}
+                </button>
+                <button v-if="editingSubject" class="btn btn-outline-secondary ms-2" @click="cancelEdit()">
+                    <i class="bi bi-x-lg me-1"></i>Cancel
+                </button>
             </div>
             <div class="col"></div>
         </div>
@@ -35,7 +40,7 @@
             <div class="col"></div>
             <div class="col-5">
                 <div class="row g-2 my-2">
-                    <GradeTable :grades="subject_grade" @remove="removeSubject" />
+                    <GradeTable :grades="subject_grade" @remove="removeSubject" @edit="editSubject" />
                 </div>
             </div>
             <div class="col-5 text-center">
@@ -71,13 +76,14 @@ const avg_grade = ref<Number>(0)
 
 const subject_input = ref<string>('')
 const grade_input = ref<number | null>(null)
+const editingSubject = ref<string | null>(null)
 
 watch(subject_grade, (newVal) => {
     const grades = newVal.map(row => row.grade).filter(Boolean)
     const sum = grades.reduce((a, b) => Number(a) + Number(b), 0)
     const count = grades.length
     avg_grade.value = Number(sum) / count || 0
-    
+
     localStorage.setItem('subject_grade', JSON.stringify(newVal))
 }, { deep: true });
 
@@ -89,16 +95,28 @@ function addSubject() {
         error.value = 'Grade must be between 2.0 - 5.0!'
         return
     } else if (subject_grade.value.some((row) => {
-        return row.subject.toLowerCase() === subject_input.value.toLowerCase()
+        return row.subject.toLowerCase() === subject_input.value.toLowerCase() && row.subject !== editingSubject.value
     })) {
         error.value = 'This subject already exists!'
         return
     }
 
-    subject_grade.value.push({
-        subject: subject_input.value,
-        grade: grade_input.value
-    })
+    if (editingSubject.value) {
+        const index = subject_grade.value.findIndex(row => row.subject === editingSubject.value)
+        if (index !== -1) {
+            subject_grade.value[index] = {
+                subject: subject_input.value,
+                grade: grade_input.value
+            }
+        }
+        editingSubject.value = null
+    } else {
+        subject_grade.value.push({
+            subject: subject_input.value,
+            grade: grade_input.value
+        })
+    }
+
     subject_input.value = ''
     grade_input.value = null
     error.value = ''
@@ -110,6 +128,19 @@ function removeSubject(subject: String, grade: Number | null) {
     })
 }
 
+function editSubject(subject: string, grade: number | null) {
+    subject_input.value = subject
+    grade_input.value = grade
+    editingSubject.value = subject
+}
+
+function cancelEdit() {
+    subject_input.value = ''
+    grade_input.value = null
+    editingSubject.value = null
+    error.value = ''
+}
+
 onMounted(() => {
     const storedGrades = localStorage.getItem('subject_grade')
     if (storedGrades) {
@@ -118,6 +149,4 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

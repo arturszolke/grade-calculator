@@ -13,6 +13,9 @@
                 <td>{{ row.subject }}</td>
                 <td class="text-center">{{ row.grade }}</td>
                 <td class="text-center">
+                    <button class="btn btn-outline-primary me-1" @click="$emit('edit', row.subject, row.grade)">
+                        <i class="bi bi-pencil"></i>
+                    </button>
                     <button class="btn btn-outline-danger" @click="$emit('remove', row.subject, row.grade)">
                         <i class="bi bi-x"></i>
                     </button>
@@ -31,6 +34,7 @@ const props = defineProps<{
 
 defineEmits<{
     (e: 'remove', subject: string, grade: number | null): void
+    (e: 'edit', subject: string, grade: number | null): void
 }>();
 
 const sortKey = ref<'subject' | 'grade' | null>(null);
